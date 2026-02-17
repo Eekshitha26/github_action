@@ -48,6 +48,10 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Package application
+        run: mvn clean package
+
+
       # 8. Set GCP project
       - name: Set GCP project
         run: gcloud config set project internal-sandbox-446612

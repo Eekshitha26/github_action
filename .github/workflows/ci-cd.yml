@@ -50,10 +50,14 @@ jobs:
       # 7️⃣ Copy JAR from GitHub runner to VM
       - name: Copy JAR to VM
         run: |
-          scp -o StrictHostKeyChecking=no \
-              -i <(echo "${{ secrets.SSH_PRIVATE_KEY }}") \
-              target/github-actions-demo-1.0-SNAPSHOT.jar \
-              ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/home/${{ secrets.VM_USER }}/app/
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
+            chmod 600 /tmp/ssh_key
+
+            scp -o StrictHostKeyChecking=no \
+            -i /tmp/ssh_key \
+            target/github-actions-demo-1.0-SNAPSHOT.jar \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/home/${{ secrets.VM_USER }}/app/
+
 
       # 8️⃣ Run Java application on VM
       - name: Run Java App

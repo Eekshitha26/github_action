@@ -59,7 +59,7 @@ jobs:
             ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/home/${{ secrets.VM_USER }}/app/
 
 
-      # 8️⃣ Run Java application on VM
+      # 8️⃣ Run Java application on VM# 8️⃣ Run Java application on VM (background)
       - name: Run Java App
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -67,4 +67,6 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            java -jar ~/app/github-actions-demo-1.0-SNAPSHOT.jar
+              nohup java -jar ~/app/github-actions-demo-1.0-SNAPSHOT.jar > ~/app/app.log 2>&1 &
+
+      

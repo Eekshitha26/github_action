@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build, Test & Authenticate
+    name: Build, Test & Package
     runs-on: ubuntu-latest
 
     steps:
@@ -22,20 +22,20 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # 3. Compile the project
+      # 3. Compile project
       - name: Compile project
         run: mvn clean compile
 
-      # 4. Run Java application (demo purpose)
-      - name: Run Java Application
-        run: mvn exec:java -Dexec.mainClass=App
-
-      # 5. Run unit tests
+      # 4. Run unit tests
       - name: Run unit tests
         run: mvn test
 
+      # 5. Package application (CREATE JAR)
+      - name: Package application
+        run: mvn clean package
+
       # =========================
-      # CD PART STARTS HERE
+      # CD PART (PREPARATION)
       # =========================
 
       # 6. Authenticate GitHub Actions to Google Cloud
@@ -47,10 +47,6 @@ jobs:
       # 7. Install Google Cloud SDK
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-
-      - name: Package application
-        run: mvn clean package
-
 
       # 8. Set GCP project
       - name: Set GCP project

@@ -43,7 +43,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>App</mainClass>
+                        <mainClass>com.company.App</mainClass>
                     </manifest>
                 </archive>
             </configuration>

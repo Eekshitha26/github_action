@@ -58,6 +58,7 @@ jobs:
             target/github-actions-demo-1.0-SNAPSHOT.jar \
             ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/home/${{ secrets.VM_USER }}/app/
 
+
       # 8️⃣ Run Java application on VM (background)
       - name: Run Java App
         uses: appleboy/ssh-action@v1.0.0

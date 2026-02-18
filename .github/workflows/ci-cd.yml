@@ -34,7 +34,7 @@ jobs:
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
 
-      # 6️⃣ Prepare VM (install Java, create app directory)
+      # 6️⃣ Prepare VM (install Java & create app directory)
       - name: Prepare VM via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -42,24 +42,23 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo apt update
+            sudo apt update -y
             sudo apt install -y openjdk-17-jdk
-            mkdir -p ~/app
-            rm -rf ~/app/*
+            mkdir -p /home/${{ secrets.VM_USER }}/app
+            rm -rf /home/${{ secrets.VM_USER }}/app/*
 
-      # 7️⃣ Copy JAR from GitHub runner to VM
+      # 7️⃣ Copy JAR from GitHub Runner → VM
       - name: Copy JAR to VM
         run: |
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
-            chmod 600 /tmp/ssh_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
+          chmod 600 /tmp/ssh_key
 
-            scp -o StrictHostKeyChecking=no \
+          scp -o StrictHostKeyChecking=no \
             -i /tmp/ssh_key \
             target/github-actions-demo-1.0-SNAPSHOT.jar \
             ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/home/${{ secrets.VM_USER }}/app/
 
-
-      # 8️⃣ Run Java application on VM# 8️⃣ Run Java application on VM (background)
+      # 8️⃣ Run Java application on VM (background)
       - name: Run Java App
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -67,6 +66,5 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-              nohup java -jar ~/app/github-actions-demo-1.0-SNAPSHOT.jar > ~/app/app.log 2>&1 &
-
-      
+            nohup java -jar /home/${{ secrets.VM_USER }}/app/github-actions-demo-1.0-SNAPSHOT.jar \
+              > /home/${{ secrets.VM_USER }}/app/app.log 2>&1 &
